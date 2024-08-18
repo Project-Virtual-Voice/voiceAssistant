@@ -36,18 +36,24 @@ voices = engine.getProperty('voices')
 engine.setProperty('voices', voices[0].id)
 
 rate = engine.getProperty('rate')
-engine.setProperty('rate', rate - 50)
+engine.setProperty('rate', 190)
 
 def preprocess_text(text):
     cleaned_text = re.sub(r'[^\w\s]', '', text)
     return cleaned_text.strip()
 
 def speak(audio):
+    original_audio = audio
     cleaned_audio = preprocess_text(audio)
-    print("Assistant:", cleaned_audio)
-    engine.say(cleaned_audio)
-    engine.runAndWait()
+    print("Assistant:", original_audio)
 
+    sentences = audio.split('.')
+    for sentence in sentences:
+        if sentence.strip():
+            engine.say(sentence.strip())
+            engine.runAndWait()
+            time.sleep(0.1)
+           
 def wishMe():
     hour=int(datetime.datetime.now().hour)
     if (hour>=4 and hour<12):
@@ -59,19 +65,24 @@ def wishMe():
     else:
         speak("Hello!")
 
-
-    assisname=("Jarvis")
-    speak("I am your voice Assistant")
-    speak(assisname)
+    combined_text = "I am your voice Assistant, Jarvis."
+    speak(combined_text)
 
     
 def username():
     speak("What should i call you?")
     uname = takeCommand()
-    speak("Welcome Mister")
-    speak(uname)
-     
-    speak("How can i Help you, Sir")
+
+    if uname == "None":
+        speak("I didn't catch that. What should i call you?")
+        uname = takeCommand()
+
+    if uname != "None":
+        speak("Welcome Mister")
+        speak(uname)
+        speak("How can i Help you, Sir")
+    else:
+        speak("Unable to recognize your name. Please try again later.")
 
 
  
@@ -100,6 +111,16 @@ def takeCommand():
     return query
 
 
+def sendEmail(to, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+     
+    server.login('your email id', 'your email password')
+    server.sendmail('your email id', to, content)
+    server.close()
+
+
 def get_gemini_response(contents):
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
@@ -123,8 +144,8 @@ def get_gemini_response(contents):
     except Exception as e:
         print(f"Error interacting with Gemini AI: {e}")
         return "Sorry, I'm having trouble connecting to Gemini AI right now."
+    
 
-   
 if __name__ == '__main__':
     clear = lambda: os.system('cls')
     
@@ -139,6 +160,15 @@ if __name__ == '__main__':
             speak("Goodbye!")
             break
 
-        response = get_gemini_response(query)
-        print(response)
-        speak(response)
+        elif "ask AI" in query or "ask gemini" in query:
+            response = get_gemini_response(query)
+            # print(response)
+            speak(response)
+
+        elif "open youtube" in query:
+            speak("Here you go to Youtube")
+            webbrowser.open('youtube.com')
+            break
+
+        else:
+            speak("I can only respond to 'ask Gemini' for now.")
