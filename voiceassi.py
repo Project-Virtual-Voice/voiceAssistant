@@ -80,7 +80,6 @@ def username():
     if uname != "None":
         speak("Welcome Mister")
         speak(uname)
-        speak("How can i Help you, Sir")
     else:
         speak("Unable to recognize your name. Please try again later.")
 
@@ -145,30 +144,42 @@ def get_gemini_response(contents):
         print(f"Error interacting with Gemini AI: {e}")
         return "Sorry, I'm having trouble connecting to Gemini AI right now."
     
-
-if __name__ == '__main__':
-    clear = lambda: os.system('cls')
-    
-    clear()
-    wishMe()
-    username()
+def activate_assistant():
+    speak("How can i assist you?")
 
     while True:
-        query = takeCommand().lower()
+        command = takeCommand().lower()
 
-        if query in ["exit", "quit", "stop"]:
-            speak("Goodbye!")
+        if command in ["exit", "stop", "quit"]:
+            speak("Goodbye")
             break
 
-        elif "ask AI" in query or "ask gemini" in query:
-            response = get_gemini_response(query)
+        elif "ask AI" in command or "ask gemini" in command:
+            response = get_gemini_response(command)
             # print(response)
             speak(response)
 
-        elif "open youtube" in query:
+        elif "open youtube" in command:
             speak("Here you go to Youtube")
             webbrowser.open('youtube.com')
             break
 
         else:
-            speak("I can only respond to 'ask Gemini' for now.")
+            speak("Is there anything else I can help you with?") 
+
+if __name__ == '__main__':
+    clear = lambda: os.system('cls')
+    
+    clear()
+
+
+    while True:
+        speak("Say 'Hey Jarvis' to activate the assistant")
+        query = takeCommand().lower()
+
+        if 'hey jarvis' in query:
+            wishMe()
+            username()
+            activate_assistant()
+        else:
+            continue
