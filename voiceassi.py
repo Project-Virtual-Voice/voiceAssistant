@@ -210,6 +210,26 @@ def activate_assistant():
             if not handle_follow_up():
                 break
 
+        elif "open google" in command:
+            speak("Here you go to Google")
+            webbrowser.open('google.com')
+            break
+
+        elif "open stack overflow" in command:
+            speak("Here you go to stackoverflow.happy coding")
+            webbrowser.open('stackoverflow.com')
+            break
+        
+        elif "wikipedia" in command:
+            speak("Searching wikipedia")
+            command=command.replace("wikipedia","")
+            results=wikipedia.summary(command,sentences=3)
+            speak("According to wikipedia..")
+            print(results)
+            speak(results)
+            break
+
+
         else:
             speak("Give me command so that i can help you")
             if not handle_follow_up():
