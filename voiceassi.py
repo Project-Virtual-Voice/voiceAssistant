@@ -47,7 +47,7 @@ def speak(audio):
     cleaned_audio = preprocess_text(audio)
     print("Assistant:", original_audio)
 
-    sentences = audio.split('.')
+    sentences = re.split(r'(?<=[.!?]) +', cleaned_audio)
     for sentence in sentences:
         if sentence.strip():
             engine.say(sentence.strip())
@@ -94,8 +94,8 @@ def takeCommand():
         print("Listening...")
         r.adjust_for_ambient_noise(source, duration=0.5)  # Adjust for ambient noise
         r.pause_threshold = 1
-        r.energy_threshold = 100  # Adjust this value based on your environment
-        audio = r.listen(source, timeout=5, phrase_time_limit=5)
+        r.energy_threshold = 2000  # Adjust this value based on your environment
+        audio = r.listen(source, timeout=10, phrase_time_limit=5)
   
     try:
         print("Recognizing...")    
@@ -144,42 +144,103 @@ def get_gemini_response(contents):
         print(f"Error interacting with Gemini AI: {e}")
         return "Sorry, I'm having trouble connecting to Gemini AI right now."
     
+
+def handle_follow_up():
+    speak("Is there anything else I can help you with?") 
+    follow_up = takeCommand().lower()
+    if follow_up in ["no", "nothing", "no thanks"]:
+        speak("Okay, I'll be here if you need me.")
+        return False
+    return True
+
+    
 def activate_assistant():
-    speak("How can i assist you?")
+    global listening
+    listening = True
 
     while True:
+        speak("How can i assist you?")
         command = takeCommand().lower()
 
         if command in ["exit", "stop", "quit"]:
             speak("Goodbye")
+            global exit_flag
+            exit_flag = True
             break
 
         elif "ask AI" in command or "ask gemini" in command:
             response = get_gemini_response(command)
-            # print(response)
             speak(response)
+            if not handle_follow_up():
+                break
 
         elif "open youtube" in command:
             speak("Here you go to Youtube")
             webbrowser.open('youtube.com')
-            break
+
+            time.sleep(2)
+            if not handle_follow_up():
+                break
+
+        elif "open google" in command:
+            speak("Here you go to Google")
+            webbrowser.open('google.com')
+
+            time.sleep(2)
+            if not handle_follow_up():
+                break
+
+        elif "open stack overflow" in command:
+            speak("Here you go to stackoverflow.happy coding")
+            webbrowser.open('stackoverflow.com')
+
+            time.sleep(2)
+            if not handle_follow_up():
+                break
+        
+        elif "wikipedia" in command:
+            speak("Searching wikipedia")
+            command=command.replace("wikipedia","")
+            results=wikipedia.summary(command,sentences=3)
+            speak("According to wikipedia..")
+            print(results)
+            speak(results)
+
+            time.sleep(2)
+            if not handle_follow_up():
+                break
 
         else:
-            speak("Is there anything else I can help you with?") 
+            speak("Give me command so that i can help you")
+            if not handle_follow_up():
+                break
 
+    listening = False
+            
 if __name__ == '__main__':
     clear = lambda: os.system('cls')
     
     clear()
 
+    speak("Say 'Hey Jarvis' to activate the assistant")
 
-    while True:
-        speak("Say 'Hey Jarvis' to activate the assistant")
+    global exit_flag
+    exit_flag = False
+    listening = True
+
+    while not exit_flag:
         query = takeCommand().lower()
 
+        if query == "none":
+            continue
+
         if 'hey jarvis' in query:
+            if not listening:
+                speak("Yes")
+                activate_assistant()
+                break
             wishMe()
             username()
             activate_assistant()
-        else:
-            continue
+
+
