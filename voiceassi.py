@@ -78,8 +78,7 @@ def username():
         uname = takeCommand()
 
     if uname != "None":
-        speak("Welcome Mister")
-        speak(uname)
+        speak(f"Welcome, Mister {uname}")
     else:
         speak("Unable to recognize your name. Please try again later.")
 
@@ -210,6 +209,39 @@ def activate_assistant():
             if not handle_follow_up():
                 break
 
+        elif "search" in command or "play" in command:
+            command = command.replace("search", "")
+            command = command.replace("play", "")
+            webbrowser.open(command)
+
+            time.sleep(2)
+            if not handle_follow_up():
+                break
+
+        elif "news" in command:
+            api_key = '29e2ca9cf2564074aa31d255a02d959b'
+            url = f'https://newsapi.org/v2/top-headlines?source=the-times-of-india&apikey={api_key}'  
+
+            try:
+                jsonObj = urlopen(url)
+                data = json.load(jsonObj)
+                i=1
+
+                speak("Here are some top news from the times of india")
+                print('''==================== TIMES OF INDIA ====================''' + '\n')
+
+                for item in data['articles']:
+
+                    print(str(i) + '. ' + item["title"] + '\n')
+                    print(item["description"] + '\n')
+                    speak(str(i) + '. ' + item["title"] + '\n')
+                    i += 1
+
+            except Exception as e:
+
+                print(str(e))
+
+
         else:
             speak("Give me command so that i can help you")
             if not handle_follow_up():
@@ -239,8 +271,8 @@ if __name__ == '__main__':
                 speak("Yes")
                 activate_assistant()
                 break
-            wishMe()
-            username()
+            # wishMe()
+            # username()
             activate_assistant()
 
 
