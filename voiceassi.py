@@ -183,6 +183,42 @@ def activate_assistant():
             speak(results)
             break
 
+        elif  "play music" in command or "play song" in command:
+            speak("Here you go with your music")
+            music_dir=r"C:\MY MUSIC"
+            songs=os.listdir(music_dir)
+            print(songs)
+            random=os.startfile(os.path.join(music_dir,songs[0]))
+            # spotify_url="https://open.spotify.com/album/0a183xiCHiC1GQd8ou7WXO?si=koTFQMMuQPWYQbE1ckgx6Q"
+            # webbrowser.open('spotify_url')
+            break
+
+        elif "time" in command:
+            strTime=datetime.datetime.now().strftime("%H:%M:%S")
+            speak(f"Sir your time is {strTime}")
+            break
+
+        elif "open microsoft edge" in command:
+            codePath=r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+            os.startfile(codePath)
+            break
+
+        elif "how are you" in command or "how r u" in command :
+           speak(f"I am fine,i hope you are doing well")
+           speak(f"so ,how are you sir")
+           
+
+        elif "fine" in command or "good" in command:
+         speak(f"Good to see u fine ")
+         break
+
+        elif "change my name to" in command:
+         command=command.replace("change my name to","")
+         uname=command
+         break
+
+        
+
 
         else:
             speak("Is there anything else I can help you with?") 
@@ -198,8 +234,8 @@ if __name__ == '__main__':
         query = takeCommand().lower()
 
         if 'hey jarvis' in query:
-            # wishMe()
-            # username()
+            wishMe()
+            username()
             activate_assistant()
         else:
             continue
