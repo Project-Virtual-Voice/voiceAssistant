@@ -38,6 +38,8 @@ engine.setProperty('voices', voices[0].id)
 rate = engine.getProperty('rate')
 engine.setProperty('rate', 190)
 
+assname="Jarvis"
+
 def preprocess_text(text):
     cleaned_text = re.sub(r'[^\w\s]', '', text)
     return cleaned_text.strip()
@@ -64,8 +66,9 @@ def wishMe():
         speak("Good Evening")
     else:
         speak("Hello!")
-
-    combined_text = "I am your voice Assistant, Jarvis."
+    
+    
+    combined_text = f"I am your voice Assistant, {assname}."
     speak(combined_text)
 
     
@@ -165,7 +168,7 @@ def activate_assistant():
             speak("Goodbye")
             global exit_flag
             exit_flag = True
-            break
+            exit()
 
         elif "ask AI" in command or "ask gemini" in command:
             response = get_gemini_response(command)
@@ -270,12 +273,32 @@ def activate_assistant():
          speak(f"Good to see u fine ")
          break
 
-        elif "change my name to" in command:
-         command=command.replace("change my name to","")
-         uname=command
-         break
+        # elif "change my name to" in command:
+        #  command=command.replace("change my name to","")
+        #  uname=command
+        #  break
 
+        elif "what's your name" in command or "what is your name" in command:
+            speak(f"my friends call me {assname}")
+
+
+        elif "powerpoint presentation" in command:
+            speak(f"opening your powerpoint presentation")
+            power=r"C:\Users\DIGITAL GAMING\Documents\Bruce Wayne.pptx"
+            os.startfile(power)
+            
+
+        elif  "who are you" in command:
+            speak(f"I am your voice assistant created by mister Ayanji")   
+            
+
+        elif  "reason for you" in command:
+            speak(f"i was develop as minor project by  mister Ayyanji")
         
+
+            
+         
+           
 
 
         else:
