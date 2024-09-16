@@ -168,37 +168,33 @@ def activate_assistant():
             speak("Goodbye")
             global exit_flag
             exit_flag = True
-            exit()
+            break
 
         elif "ask AI" in command or "ask gemini" in command:
             response = get_gemini_response(command)
             speak(response)
-            if not handle_follow_up():
-                break
+            
 
         elif "open youtube" in command:
             speak("Here you go to Youtube")
             webbrowser.open('youtube.com')
 
             time.sleep(2)
-            if not handle_follow_up():
-                break
+            
 
         elif "open google" in command:
             speak("Here you go to Google")
             webbrowser.open('google.com')
 
             time.sleep(2)
-            if not handle_follow_up():
-                break
+            
 
         elif "open stack overflow" in command:
             speak("Here you go to stackoverflow.happy coding")
             webbrowser.open('stackoverflow.com')
 
             time.sleep(2)
-            if not handle_follow_up():
-                break
+            
         
         elif "wikipedia" in command:
             speak("Searching wikipedia")
@@ -209,8 +205,7 @@ def activate_assistant():
             speak(results)
 
             time.sleep(2)
-            if not handle_follow_up():
-                break
+            
 
         elif "search" in command or "play" in command:
             command = command.replace("search", "")
@@ -218,8 +213,7 @@ def activate_assistant():
             webbrowser.open(command)
 
             time.sleep(2)
-            if not handle_follow_up():
-                break
+           
 
         elif "news" in command:
             api_key = '29e2ca9cf2564074aa31d255a02d959b'
@@ -252,17 +246,17 @@ def activate_assistant():
             random=os.startfile(os.path.join(music_dir,songs[0]))
             # spotify_url="https://open.spotify.com/album/0a183xiCHiC1GQd8ou7WXO?si=koTFQMMuQPWYQbE1ckgx6Q"
             # webbrowser.open('spotify_url')
-            break
+            
 
         elif "time" in command:
             strTime=datetime.datetime.now().strftime("%H:%M:%S")
             speak(f"Sir your time is {strTime}")
-            break
+            
 
         elif "open microsoft edge" in command:
             codePath=r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
             os.startfile(codePath)
-            break
+            
 
         elif "how are you" in command or "how r u" in command :
            speak(f"I am fine,i hope you are doing well")
@@ -271,7 +265,7 @@ def activate_assistant():
 
         elif "fine" in command or "good" in command:
          speak(f"Good to see u fine ")
-         break
+         
 
         # elif "change my name to" in command:
         #  command=command.replace("change my name to","")
@@ -280,20 +274,24 @@ def activate_assistant():
 
         elif "what's your name" in command or "what is your name" in command:
             speak(f"my friends call me {assname}")
+           
 
 
         elif "powerpoint presentation" in command:
             speak(f"opening your powerpoint presentation")
             power=r"C:\Users\DIGITAL GAMING\Documents\Bruce Wayne.pptx"
             os.startfile(power)
+           
             
 
         elif  "who are you" in command:
-            speak(f"I am your voice assistant created by mister Ayanji")   
+            speak(f"I am your voice assistant created by mister Ayanji")
+              
             
 
         elif  "reason for you" in command:
             speak(f"i was develop as minor project by  mister Ayyanji")
+           
         
 
             
