@@ -55,7 +55,7 @@ def speak(audio):
             engine.say(sentence.strip())
             engine.runAndWait()
             time.sleep(0.1)
-           
+        
 def wishMe():
     hour=int(datetime.datetime.now().hour)
     if (hour>=4 and hour<12):
@@ -85,31 +85,40 @@ def username():
     else:
         speak("Unable to recognize your name. Please try again later.")
 
-
- 
 def takeCommand():
-     
-    r = sr.Recognizer()
-     
-    with sr.Microphone() as source:
-         
-        print("Listening...")
-        r.adjust_for_ambient_noise(source, duration=0.5)  # Adjust for ambient noise
-        r.pause_threshold = 1
-        r.energy_threshold = 2000  # Adjust this value based on your environment
-        audio = r.listen(source, timeout=10, phrase_time_limit=5)
-  
-    try:
-        print("Recognizing...")    
-        query = r.recognize_google(audio, language ='en-in')
-        print(f"You: {query}\n")
-  
-    except Exception as e:
-        print(e)    
-        print("Unable to Recognize your voice.")  
-        return "None"
-     
-    return query
+    print("\Choose input method:")
+    print("[1] Type your command")
+    print("[2] Speak your command")
+
+    choice = input("Enter 1 or 2: ").strip().lower()
+    
+    if choice == "1":
+        command = input("Enter your command: ").strip().lower()
+        return command
+    
+    elif choice == "2":
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            print("Listening...")
+            r.adjust_for_ambient_noise(source, duration=0.5)  # Adjust for ambient noise
+            r.pause_threshold = 1
+            r.energy_threshold = 2000  # Adjust this value based on your environment
+            audio = r.listen(source, timeout=10, phrase_time_limit=5)
+            
+        try:
+            print("Recognizing...")    
+            query = r.recognize_google(audio, language ='en-in')
+            print(f"You: {query}\n")
+            return query.lower()
+
+        except Exception as e:
+            print(f"error: {e}")    
+            print("Unable to Recognize your voice. Try again or type your command.")  
+            return takeCommand()
+    
+    else:
+        print("Invalid choice! Please enter 1 or 2.")
+        return takeCommand()
 
 
 def sendEmail(to, content):
@@ -155,18 +164,20 @@ def handle_follow_up():
         return False
     return True
 
+
+def open_in_chrome(url):
+    chrome_path= "C:/Program Files/Google/Chrome/Application/chrome.exe %s"
+    webbrowser.get(chrome_path).open(url)
     
 def activate_assistant():
-    global listening
-    listening = True
+    global exit_flag
 
-    while True:
+    while not exit_flag:
         speak("How can i assist you?")
         command = takeCommand().lower()
 
         if command in ["exit", "stop", "quit"]:
             speak("Goodbye")
-            global exit_flag
             exit_flag = True
             break
 
@@ -177,21 +188,21 @@ def activate_assistant():
 
         elif "open youtube" in command:
             speak("Here you go to Youtube")
-            webbrowser.open('youtube.com')
+            open_in_chrome('youtube.com')
 
             time.sleep(2)
             
 
         elif "open google" in command:
             speak("Here you go to Google")
-            webbrowser.open('google.com')
+            open_in_chrome('google.com')
 
             time.sleep(2)
             
 
         elif "open stack overflow" in command:
             speak("Here you go to stackoverflow.happy coding")
-            webbrowser.open('stackoverflow.com')
+            open_in_chrome('stackoverflow.com')
 
             time.sleep(2)
             
@@ -207,13 +218,15 @@ def activate_assistant():
             time.sleep(2)
             
 
-        elif "search" in command or "play" in command:
-            command = command.replace("search", "")
-            command = command.replace("play", "")
-            webbrowser.open(command)
-
-            time.sleep(2)
-           
+        elif "search" in command:
+            command = command.replace("search", "").strip()
+            if command:
+                query_url= f"https://www.google.com/search?q={command.replace(' ', '+')}"
+                open_in_chrome(query_url)
+                time.sleep(2)
+            else:
+                speak("What would you like to search for?")
+        
 
         elif "news" in command:
             api_key = '29e2ca9cf2564074aa31d255a02d959b'
@@ -240,12 +253,8 @@ def activate_assistant():
 
         elif  "play music" in command or "play song" in command:
             speak("Here you go with your music")
-            music_dir=r"C:\MY MUSIC"
-            songs=os.listdir(music_dir)
-            print(songs)
-            random=os.startfile(os.path.join(music_dir,songs[0]))
-            # spotify_url="https://open.spotify.com/album/0a183xiCHiC1GQd8ou7WXO?si=koTFQMMuQPWYQbE1ckgx6Q"
-            # webbrowser.open('spotify_url')
+            spotify_url="https://open.spotify.com/"
+            open_in_chrome(spotify_url)
             
 
         elif "time" in command:
@@ -267,10 +276,10 @@ def activate_assistant():
             speak(f"Good to see u fine ")
         
 
-        # elif "change my name to" in command:
-        #  command=command.replace("change my name to","")
-        #  uname=command
-        #  break
+        elif "change my name to" in command:
+            command=command.replace("change my name to","")
+            uname=command
+            break
 
         elif "what's your name" in command or "what is your name" in command:
             speak(f"my friends call me {assname}")
@@ -284,12 +293,12 @@ def activate_assistant():
         
             
 
-        elif  "who are you" in command:
+        elif "who are you" in command:
             speak(f"I am your voice assistant created by mister Ayanji")
 
             
 
-        elif  "reason for you" in command:
+        elif "reason for you" in command:
             speak(f"i was develop as minor project by  mister Ayyanji")
     
         else:
@@ -297,33 +306,19 @@ def activate_assistant():
             if not handle_follow_up():
                 break
 
-    listening = False
-            
+listening = False
+
 if __name__ == '__main__':
     clear = lambda: os.system('cls')
-    
-    clear()
 
-    speak("Say 'Hey Jarvis' to activate the assistant")
+    clear()
 
     global exit_flag
     exit_flag = False
-    listening = True
 
-    while not exit_flag:
-        query = takeCommand().lower()
-
-        if query == "none":
-            continue
-
-        if 'hey jarvis' in query:
-            if not listening:
-                speak("Yes")
-                activate_assistant()
-                break
-            # wishMe()
-            # username()
-            activate_assistant()
+    # wishMe()
+    # username()
+    activate_assistant()
 
 #---------------------------------------------------------------
 
