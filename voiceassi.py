@@ -259,13 +259,13 @@ def activate_assistant():
             
 
         elif "how are you" in command or "how r u" in command :
-           speak(f"I am fine,i hope you are doing well")
-           speak(f"so ,how are you sir")
-           
+            speak(f"I am fine,i hope you are doing well")
+            speak(f"so ,how are you sir")
+        
 
         elif "fine" in command or "good" in command:
-         speak(f"Good to see u fine ")
-         
+            speak(f"Good to see u fine ")
+        
 
         # elif "change my name to" in command:
         #  command=command.replace("change my name to","")
@@ -274,31 +274,24 @@ def activate_assistant():
 
         elif "what's your name" in command or "what is your name" in command:
             speak(f"my friends call me {assname}")
-           
+        
 
 
         elif "powerpoint presentation" in command:
             speak(f"opening your powerpoint presentation")
             power=r"C:\Users\DIGITAL GAMING\Documents\Bruce Wayne.pptx"
             os.startfile(power)
-           
+        
             
 
         elif  "who are you" in command:
             speak(f"I am your voice assistant created by mister Ayanji")
-              
+
             
 
         elif  "reason for you" in command:
             speak(f"i was develop as minor project by  mister Ayyanji")
-           
-        
-
-            
-         
-           
-
-
+    
         else:
             speak("Give me command so that i can help you")
             if not handle_follow_up():
