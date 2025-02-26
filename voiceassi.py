@@ -11,6 +11,7 @@ import wikipedia
 import webbrowser
 import os
 import winshell
+import requests
 import pyjokes
 import feedparser
 import smtplib
@@ -31,17 +32,17 @@ from urllib.request import urlopen
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 
-engine = pyttsx3.init('sapi5')
+engine = pyttsx3.init()
 voices = engine.getProperty('voices')
-engine.setProperty('voices', voices[0].id)
+engine.setProperty('voices', voices[1].id)
 
 rate = engine.getProperty('rate')
-engine.setProperty('rate', 190)
+engine.setProperty('rate', 180)
 
 assname="Jarvis"
 
 def preprocess_text(text):
-    cleaned_text = re.sub(r'[^\w\s]', '', text)
+    cleaned_text = re.sub(r'[^\w\s.,:!?]', '', text)
     return cleaned_text.strip()
 
 def speak(audio):
@@ -86,7 +87,7 @@ def username():
         speak("Unable to recognize your name. Please try again later.")
 
 def takeCommand():
-    print("\Choose input method:")
+    speak("Choose input method:")
     print("[1] Type your command")
     print("[2] Speak your command")
 
@@ -171,9 +172,9 @@ def open_in_chrome(url):
     
 def activate_assistant():
     global exit_flag
+    speak("How can i assist you?")
 
     while not exit_flag:
-        speak("How can i assist you?")
         command = takeCommand().lower()
 
         if command in ["exit", "stop", "quit"]:
@@ -229,27 +230,36 @@ def activate_assistant():
         
 
         elif "news" in command:
-            api_key = '29e2ca9cf2564074aa31d255a02d959b'
-            url = f'https://newsapi.org/v2/top-headlines?source=the-times-of-india&apikey={api_key}'  
+            api_key = '61ec3218ce70467133506eb2bf1cde59'
+            url = f'https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey={api_key}'  
 
             try:
-                jsonObj = urlopen(url)
-                data = json.load(jsonObj)
-                i=1
+                response = requests.get(url)
+                data = response.json()
+                
+                articles = data.get("articles", [])    
+                if not isinstance (articles, list) or not articles:
+                    speak("No news articles found!")
+                    return
+                        
+                else:
+                    print('''==================== TIMES OF INDIA ====================''' + '\n')
+                    speak("Here are the top news headlines")
 
-                speak("Here are some top news from the times of india")
-                print('''==================== TIMES OF INDIA ====================''' + '\n')
 
-                for item in data['articles']:
+                for i, item in enumerate(articles[:5], start=1):
+                    if isinstance(item, dict):
+                        title = item.get("title", "No title")
+                        description = item.get("description", "No description available")
 
-                    print(str(i) + '. ' + item["title"] + '\n')
-                    print(item["description"] + '\n')
-                    speak(str(i) + '. ' + item["title"] + '\n')
-                    i += 1
+                        speak(f"News {i}. {title}")
+                        print(f"Description: {description}\n")
 
-            except Exception as e:
-
-                print(str(e))
+            except requests.exceptions.RequestException as e:
+                print("error:", e)
+                speak("Sorry I couldn't fetch the news at this moment.")
+            
+            speak("These are some of the top news headlines for today.")
 
         elif  "play music" in command or "play song" in command:
             speak("Here you go with your music")
@@ -258,8 +268,13 @@ def activate_assistant():
             
 
         elif "time" in command:
-            strTime=datetime.datetime.now().strftime("%H:%M:%S")
-            speak(f"Sir your time is {strTime}")
+            now=datetime.datetime.now()
+            hour= now.strftime("%I")
+            minute= now.strftime("%M")
+            am_pm = now.strftime("%p")
+            
+            formatted_time = f"{hour}:{minute} {am_pm}"
+            speak(f"Sir, the time is {formatted_time}")
             
 
         elif "open microsoft edge" in command:
@@ -309,6 +324,7 @@ def activate_assistant():
 listening = False
 
 if __name__ == '__main__':
+    
     clear = lambda: os.system('cls')
 
     clear()
