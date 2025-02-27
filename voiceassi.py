@@ -21,6 +21,7 @@ import time
 import shutil
 import google.generativeai as genai
 import re
+import pyautogui
 from twilio.rest import Client
 from clint.textui import progress
 from ecapture import ecapture as ec
@@ -29,7 +30,7 @@ import win32com.client as wincl
 from urllib.request import urlopen
 
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 
 engine = pyttsx3.init()
@@ -315,6 +316,17 @@ def activate_assistant():
 
         elif "reason for you" in command:
             speak(f"i was develop as minor project by  mister Ayyanji")
+
+        elif "change background" in command:
+            ctypes.windll.user32.SystemParametersInfoW(20,0,"C:\\Users\\Digital Gaming\\wallpaper",3)
+            speak("background change successfully")
+
+        elif "lock the windows" in command:
+       
+            os.system('rundll32.exe user32.dll,LockWorkStation')
+            speak("Locking the windows")
+        
+
     
         else:
             speak("Give me command so that i can help you")
