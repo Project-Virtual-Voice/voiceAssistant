@@ -30,7 +30,7 @@ import win32com.client as wincl
 from urllib.request import urlopen
 
 
-# genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 
 engine = pyttsx3.init()
@@ -135,7 +135,7 @@ def sendEmail(to, content):
 
 def get_gemini_response(contents):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.0-flash')
 
         response = model.generate_content(
             contents=contents,
