@@ -17,6 +17,7 @@ import feedparser
 import smtplib
 import ctypes
 import time
+import sys
 # import requets
 import shutil
 import google.generativeai as genai
@@ -35,7 +36,7 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
-engine.setProperty('voices', voices[1].id)
+engine.setProperty('voice', voices[1].id)
 
 rate = engine.getProperty('rate')
 engine.setProperty('rate', 180)
@@ -87,18 +88,30 @@ def username():
     else:
         speak("Unable to recognize your name. Please try again later.")
 
-def takeCommand():
-    speak("Choose input method:")
-    print("[1] Type your command")
-    print("[2] Speak your command")
+user_input_method = None
 
-    choice = input("Enter 1 or 2: ").strip().lower()
+def takeCommand():
+    global user_input_method
     
-    if choice == "1":
-        command = input("Enter your command: ").strip().lower()
+    if user_input_method is None:
+        speak("Choose input method:")
+        print("[1] Type your command")
+        print("[2] Speak your command")
+
+        while True:
+            choice = input("Enter 1 or 2: ").strip().lower()
+    
+            if choice in ["1", "2"]:
+                user_input_method = choice
+                break
+            else:
+                print("Invalid choice! Please enter 1 or 2.")
+                
+    if user_input_method == "1":
+        command = input("Enter your command:").strip().lower()
         return command
     
-    elif choice == "2":
+    elif user_input_method == "2":
         r = sr.Recognizer()
         with sr.Microphone() as source:
             print("Listening...")
@@ -117,17 +130,13 @@ def takeCommand():
             print(f"error: {e}")    
             print("Unable to Recognize your voice. Try again or type your command.")  
             return takeCommand()
-    
-    else:
-        print("Invalid choice! Please enter 1 or 2.")
-        return takeCommand()
 
 
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
-     
+    
     server.login('your email id', 'your email password')
     server.sendmail('your email id', to, content)
     server.close()
@@ -322,7 +331,7 @@ def activate_assistant():
             speak("background change successfully")
 
         elif "lock the windows" in command:
-       
+
             os.system('rundll32.exe user32.dll,LockWorkStation')
             speak("Locking the windows")
         
