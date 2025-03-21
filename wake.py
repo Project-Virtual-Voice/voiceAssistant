@@ -17,7 +17,7 @@ def listen_for_wake_word():
                 
                 if "hello" in command:
                     print("Wake word detected! Starting  assistant...")
-                    os.system("python voiceassi.py")
+                    os.system("python assistant.py")
                     break
                 
             except sr.UnknownValueError:
