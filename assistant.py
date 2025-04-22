@@ -1,32 +1,18 @@
 import subprocess
-import wolframalpha
 import pyttsx3
-import tkinter
-import json
-import random
-import operator
 import speech_recognition as sr
 import datetime
 import wikipedia
 import webbrowser
 import os
-import winshell
 import requests
 import pyjokes
-import feedparser
 import smtplib
 import ctypes
 import time
-import shutil
 import google.generativeai as genai
 import re
-from twilio.rest import Client
-from clint.textui import progress
 from ecapture import ecapture as ec
-from bs4 import BeautifulSoup
-import win32com.client as wincl
-from urllib.request import urlopen
-
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -138,16 +124,6 @@ def sendEmail(to, content):
     server.close()
 
 
-def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-     
-    server.login('your email id', 'your email password')
-    server.sendmail('your email id', to, content)
-    server.close()
-
-
 def get_gemini_response(contents):
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
@@ -198,7 +174,7 @@ def activate_assistant():
             exit_flag = True
             break
 
-        elif "ask AI" in command or "ask gemini" in command:
+        elif "ask ai" in command or "ask gemini" in command:
             response = get_gemini_response(command)
             speak(response)
             
@@ -247,7 +223,7 @@ def activate_assistant():
 
         elif "news" in command:
             api_key = os.getenv("newsapi")
-            url = f'https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey={api_key}'  
+            url = f'https://gnews.io/api/v4/search?q=technology&lang=en&country=us&max=5&apikey=61ec3218ce70467133506eb2bf1cde59'  
 
             try:
                 response = requests.get(url)
@@ -302,6 +278,12 @@ def activate_assistant():
             
             formatted_time = f"{hour}:{minute} {am_pm}"
             speak(f"Sir, the time is {formatted_time}")
+            
+        elif "where is" in command:
+            command = command.replace("where is", "")
+            location = command
+            speak(f"Locating{location} on google maps")
+            open_in_chrome(f"https://www.google.com/maps/place/{location}")
         
         elif "open microsoft edge" in command:
             codePath=r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
@@ -335,6 +317,10 @@ def activate_assistant():
             
         elif "joke" in command:
             speak(pyjokes.get_joke())
+            
+        elif "camera" in command or "take a photo" in command:
+            speak("Opening Camera app...")
+            os.system("start microsoft.windows.camera:")
             
         elif "lock window" in command:
             speak("locking the device")
