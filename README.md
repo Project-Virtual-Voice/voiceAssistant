@@ -84,18 +84,18 @@ Navigate to the project directory<br>
 <b>cd VoiceAssistant</b>
 
 (Optional) Create and activate virtual environment<br>
-python -m venv venv<br>
-source venv/bin/activate<br> 
-Windows: venv\Scripts\activate<br>
+<b>python -m venv venv</b><br>
+<b>source venv/bin/activate</b><br> 
+<b>Windows: venv\Scripts\activate</b><br>
 
-Install required packages
+Install required packages<br>
 <b>pip install -r requirements.txt</b>
 
-Set up your Gemini API key
-export GEMINI_API_KEY='your_gemini_api_key'   Windows (CMD): set GEMINI_API_KEY=your_gemini_api_key
+Set up your Gemini API key<br>
+<b>export GEMINI_API_KEY='your_gemini_api_key'</b><br> <b>Windows (CMD): set GEMINI_API_KEY=your_gemini_api_key</b>
 
-Run the assistant
-python main.py
+Run the assistant<br>
+<b>python main.py</b>
 
 ✅ On first run, it will ask you to choose input method:
 
