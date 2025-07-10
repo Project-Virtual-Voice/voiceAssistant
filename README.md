@@ -80,7 +80,7 @@ Follow these steps to run the voice assistant locally:
 Clone the repository
 git clone https://github.com/YourUsername/VoiceAssistant.git
 
-Navigate to the project directory
+// Navigate to the project directory
 cd VoiceAssistant
 
 (Optional) Create and activate virtual environment
