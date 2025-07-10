@@ -80,15 +80,16 @@ Follow these steps to run the voice assistant locally:
 Clone the repository
 git clone https://github.com/YourUsername/VoiceAssistant.git
 
-// Navigate to the project directory
-cd VoiceAssistant
+Navigate to the project directory<br>
+<b>cd VoiceAssistant</b>
 
-(Optional) Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+(Optional) Create and activate virtual environment<br>
+python -m venv venv<br>
+source venv/bin/activate<br> 
+Windows: venv\Scripts\activate<br>
 
 Install required packages
-pip install -r requirements.txt
+<b>pip install -r requirements.txt</b>
 
 Set up your Gemini API key
 export GEMINI_API_KEY='your_gemini_api_key'   Windows (CMD): set GEMINI_API_KEY=your_gemini_api_key
